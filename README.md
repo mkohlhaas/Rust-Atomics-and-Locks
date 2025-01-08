@@ -1,10 +1,9 @@
 This repository contains the code examples, data structures, and links from
 [Rust Atomics and Locks](https://marabos.nl/atomics/).
 
-The examples from chapters 1, 2, 3, and 8 can be found in [examples/](examples/).
-The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
+<img id="cover" src="https://marabos.nl/atomics/cover.jpg" alt="Book cover with a cute Kodiak bear" width="300" height="394">
 
-### Chapter 1 — Basics of Rust Concurrency
+#### Chapter 1 — Basics of Rust Concurrency
 
 - [examples/ch1-01-hello.rs](examples/ch1-01-hello.rs)
 - [examples/ch1-02-hello-join.rs](examples/ch1-02-hello-join.rs)
@@ -19,7 +18,7 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [examples/ch1-11-thread-parking.rs](examples/ch1-11-thread-parking.rs)
 - [examples/ch1-12-condvar.rs](examples/ch1-12-condvar.rs)
 
-### Chapter 2 — Atomics
+#### Chapter 2 — Atomics
 
 - [examples/ch2-01-stop-flag.rs](examples/ch2-01-stop-flag.rs)
 - [examples/ch2-02-progress-reporting.rs](examples/ch2-02-progress-reporting.rs)
@@ -35,7 +34,7 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [examples/ch2-12-id-allocation-without-overflow.rs](examples/ch2-12-id-allocation-without-overflow.rs)
 - [examples/ch2-13-lazy-one-time-init.rs](examples/ch2-13-lazy-one-time-init.rs)
 
-### Chapter 3 — Memory Ordering
+#### Chapter 3 — Memory Ordering
 
 - [examples/ch3-01-relaxed.rs](examples/ch3-01-relaxed.rs)
 - [examples/ch3-02-spawn-join.rs](examples/ch3-02-spawn-join.rs)
@@ -49,13 +48,13 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [examples/ch3-10-seqcst.rs](examples/ch3-10-seqcst.rs)
 - [examples/ch3-11-fence.rs](examples/ch3-11-fence.rs)
 
-### Chapter 4 — Building Our Own Spin Lock
+#### Chapter 4 — Building Our Own Spin Lock
 
 - [src/ch4_spin_lock/s1_minimal.rs](src/ch4_spin_lock/s1_minimal.rs)
 - [src/ch4_spin_lock/s2_unsafe.rs](src/ch4_spin_lock/s2_unsafe.rs)
 - [src/ch4_spin_lock/s3_guard.rs](src/ch4_spin_lock/s3_guard.rs)
 
-### Chapter 5 — Building Our Own Channels
+#### Chapter 5 — Building Our Own Channels
 
 - [src/ch5_channels/s1_simple.rs](src/ch5_channels/s1_simple.rs)
 - [src/ch5_channels/s2_unsafe.rs](src/ch5_channels/s2_unsafe.rs)
@@ -65,21 +64,21 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [src/ch5_channels/s5_borrowing.rs](src/ch5_channels/s5_borrowing.rs)
 - [src/ch5_channels/s6_blocking.rs](src/ch5_channels/s6_blocking.rs)
 
-### Chapter 6 — Building Our Own “Arc”
+#### Chapter 6 — Building Our Own “Arc”
 
 - [src/ch6_arc/s1_basic.rs](src/ch6_arc/s1_basic.rs)
 - [src/ch6_arc/s2_weak.rs](src/ch6_arc/s2_weak.rs)
 - [src/ch6_arc/s3_optimized.rs](src/ch6_arc/s3_optimized.rs)
 
-### Chapter 7 — Understanding the Processor
+#### Chapter 7 — Understanding the Processor
 
 - https://godbolt.org/
 
-### Chapter 8 — Operating System Primitives
+#### Chapter 8 — Operating System Primitives
 
 - [examples/ch8-01-futex.rs](examples/ch8-01-futex.rs)
 
-### Chapter 9 — Building Our Own Locks
+#### Chapter 9 — Building Our Own Locks
 
 - [src/ch9_locks/mutex_1.rs](src/ch9_locks/mutex_1.rs)
 - [src/ch9_locks/mutex_2.rs](src/ch9_locks/mutex_2.rs)
@@ -90,7 +89,7 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [src/ch9_locks/rwlock_2.rs](src/ch9_locks/rwlock_2.rs)
 - [src/ch9_locks/rwlock_3.rs](src/ch9_locks/rwlock_3.rs)
 
-### Chapter 10 — Ideas and Inspiration
+#### Chapter 10 — Ideas and Inspiration
 
 - [Wikipedia article on semaphores](https://en.wikipedia.org/wiki/Semaphore_(programming))
 - [Stanford University course notes on semaphores](https://see.stanford.edu/materials/icsppcs107/23-Concurrency-Examples.pdf)
@@ -106,7 +105,7 @@ The data structures from chapters 4, 5, 6, and 9 can be found in [src/](src/).
 - [Rust RFC 3301, `AtomicPerByte`](https://rust.tf/rfc3301)
 - [Documentation of the `seqlock` crate](https://docs.rs/seqlock)
 
-### License
+#### License
 
 You may use all code in this repository for any purpose.
 
