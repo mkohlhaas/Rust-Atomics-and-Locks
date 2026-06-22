@@ -1,0 +1,15 @@
+#### Chapter 10 — Ideas and Inspiration
+
+- [Wikipedia article on semaphores](https://en.wikipedia.org/wiki/Semaphore_(programming))
+- [Stanford University course notes on semaphores](https://see.stanford.edu/materials/icsppcs107/23-Concurrency-Examples.pdf)
+- [Wikipedia article on the read-copy-update pattern](https://en.wikipedia.org/wiki/Read-copy-update)
+- [LWN article "What is RCU, Fundamentally?"](https://lwn.net/Articles/262464/)
+- [Wikipedia article on non-blocking linked lists](https://en.wikipedia.org/wiki/Non-blocking_linked_list)
+- [LWN article "Using RCU for Linked Lists—A Case Study"](https://lwn.net/Articles/610972/)
+- [Notes on the implementation of Windows SRW locks](https://github.com/rust-lang/rust/issues/93740#issuecomment-1064139337)
+- [A Rust implementation of queue-based locks](https://github.com/kprotty/usync)
+- [WebKit blog post, "Locking in WebKit"](https://webkit.org/blog/6161/locking-in-webkit/)
+- [Documentation of the `parking_lot` crate](https://docs.rs/parking_lot)
+- [Wikipedia article on Linux's Seqlock](https://en.wikipedia.org/wiki/Seqlock)
+- [Rust RFC 3301, `AtomicPerByte`](https://rust.tf/rfc3301)
+- [Documentation of the `seqlock` crate](https://docs.rs/seqlock)
