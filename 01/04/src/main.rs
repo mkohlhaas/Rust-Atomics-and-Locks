@@ -9,6 +9,7 @@ fn main() {
     s.spawn(|| {
       println!("length: {}", numbers.len());
     });
+
     s.spawn(|| {
       for n in &numbers {
         println!("{n}");

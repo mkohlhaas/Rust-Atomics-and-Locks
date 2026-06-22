@@ -2,6 +2,13 @@
 
 use std::thread;
 
+fn f() {
+  println!("Hello from another thread!");
+
+  let id = thread::current().id();
+  println!("This is my thread id: {id:?}");
+}
+
 fn main() {
   let t1 = thread::spawn(f);
   let t2 = thread::spawn(f);
@@ -10,11 +17,4 @@ fn main() {
 
   t1.join().unwrap();
   t2.join().unwrap();
-}
-
-fn f() {
-  println!("Hello from another thread!");
-
-  let id = thread::current().id();
-  println!("This is my thread id: {id:?}");
 }

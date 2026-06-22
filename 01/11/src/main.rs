@@ -10,12 +10,14 @@ fn main() {
 
   thread::scope(|s| {
     // Consuming thread
-    let t = s.spawn(|| loop {
-      let item = queue.lock().unwrap().pop_front();
-      if let Some(item) = item {
-        dbg!(item);
-      } else {
-        thread::park();
+    let t = s.spawn(|| {
+      loop {
+        let item = queue.lock().unwrap().pop_front();
+        if let Some(item) = item {
+          dbg!(item);
+        } else {
+          thread::park();
+        }
       }
     });
 
