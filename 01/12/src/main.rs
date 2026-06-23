@@ -1,4 +1,5 @@
 // condvar
+// https://mara.nl/atomics/basics.html#condvar
 
 use std::collections::VecDeque;
 use std::sync::Condvar;
@@ -18,7 +19,8 @@ fn main() {
           if let Some(item) = q.pop_front() {
             break item;
           } else {
-            q = not_empty.wait(q).unwrap();
+            // wait takes a mutex and unlocks, waits, relocks
+            q = not_empty.wait(q).unwrap(); // blocks the current thread until this condition variable receives a notification
           }
         };
         drop(q);
@@ -28,8 +30,10 @@ fn main() {
 
     for i in 0.. {
       queue.lock().unwrap().push_back(i);
-      not_empty.notify_one();
-      thread::sleep(Duration::from_secs(1));
+      if i % 5 == 0 {
+        not_empty.notify_one(); // wakes up one blocked thread on this condvar
+      }
+      thread::sleep(Duration::from_millis(200));
     }
   });
 }

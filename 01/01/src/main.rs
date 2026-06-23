@@ -1,4 +1,5 @@
 // hello
+// https://mara.nl/atomics/basics.html#threads
 
 use std::thread;
 
@@ -12,6 +13,6 @@ fn f() {
 fn main() {
   thread::spawn(f);
   thread::spawn(f);
-
-  println!("Hello from the main thread.");
+  let id = thread::current().id();
+  println!("Hello from the main thread: {id:?}");
 }

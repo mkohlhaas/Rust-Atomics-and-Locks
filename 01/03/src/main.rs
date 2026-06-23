@@ -1,4 +1,5 @@
 // spawn-closure
+// https://mara.nl/atomics/basics.html#threads
 
 use std::thread;
 

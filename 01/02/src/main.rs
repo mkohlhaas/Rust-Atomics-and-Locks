@@ -1,4 +1,5 @@
 // hello join
+// https://mara.nl/atomics/basics.html#threads
 
 use std::thread;
 
@@ -13,7 +14,8 @@ fn main() {
   let t1 = thread::spawn(f);
   let t2 = thread::spawn(f);
 
-  println!("Hello from the main thread.");
+  let id = thread::current().id();
+  println!("Hello from the main thread: {id:?}");
 
   t1.join().unwrap();
   t2.join().unwrap();
