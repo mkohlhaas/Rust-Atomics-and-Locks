@@ -1,4 +1,5 @@
 // id-allocation-without-overflow
+// https://mara.nl/atomics/atomics.html#example-handle-overflow
 
 use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering::Relaxed;

@@ -1,4 +1,5 @@
 // statistics
+// https://mara.nl/atomics/atomics.html#example-statistics
 
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::AtomicUsize;
@@ -6,6 +7,10 @@ use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
 use std::time::Duration;
 use std::time::Instant;
+
+fn process_item(_: usize) {
+  thread::sleep(Duration::from_millis(100));
+}
 
 fn main() {
   let num_done = &AtomicUsize::new(0);
@@ -27,7 +32,7 @@ fn main() {
       });
     }
 
-    // The main thread shows status updates, every second.
+    // The main thread shows status updates.
     loop {
       let total_time = Duration::from_micros(total_time.load(Relaxed));
       let max_time = Duration::from_micros(max_time.load(Relaxed));
@@ -39,18 +44,14 @@ fn main() {
         println!("Working.. nothing done yet.");
       } else {
         println!(
-          "Working.. {n}/100 done, {:?} average, {:?} peak",
+          "Working.. {n}/100 done, average: {:?} , peak: {:?}",
           total_time / n as u32,
           max_time,
         );
       }
-      thread::sleep(Duration::from_secs(1));
+      thread::sleep(Duration::from_millis(250));
     }
   });
 
   println!("Done!");
-}
-
-fn process_item(_: usize) {
-  thread::sleep(Duration::from_millis(123));
 }

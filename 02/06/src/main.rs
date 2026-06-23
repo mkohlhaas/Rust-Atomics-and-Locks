@@ -1,9 +1,15 @@
 // progress-reporting-multiple-threads
+// https://mara.nl/atomics/atomics.html#example-progress-reporting-from-multiple-threads
 
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
 use std::time::Duration;
+
+fn process_item(n: usize) {
+  println!("Processing item {n}");
+  thread::sleep(Duration::from_millis(100));
+}
 
 fn main() {
   let num_done = &AtomicUsize::new(0);
@@ -19,20 +25,16 @@ fn main() {
       });
     }
 
-    // The main thread shows status updates, every second.
+    // The main thread shows status updates.
     loop {
       let n = num_done.load(Relaxed);
       if n == 100 {
         break;
       }
       println!("Working.. {n}/100 done");
-      thread::sleep(Duration::from_secs(1));
+      thread::sleep(Duration::from_millis(250));
     }
   });
 
   println!("Done!");
-}
-
-fn process_item(_: usize) {
-  thread::sleep(Duration::from_millis(123));
 }

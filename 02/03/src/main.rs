@@ -1,9 +1,14 @@
 // progress-reporting-unpark
+// https://mara.nl/atomics/atomics.html#synchronization
 
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
 use std::time::Duration;
+
+fn process_item(_: usize) {
+  thread::sleep(Duration::from_millis(50));
+}
 
 fn main() {
   let num_done = AtomicUsize::new(0);
@@ -14,9 +19,9 @@ fn main() {
     // A background thread to process all 100 items.
     s.spawn(|| {
       for i in 0..100 {
-        process_item(i); // Assuming this takes some time.
+        process_item(i); // assuming this takes some time
         num_done.store(i + 1, Relaxed);
-        main_thread.unpark(); // Wake up the main thread.
+        main_thread.unpark(); // wake up the main thread
       }
     });
 
@@ -32,8 +37,4 @@ fn main() {
   });
 
   println!("Done!");
-}
-
-fn process_item(_: usize) {
-  thread::sleep(Duration::from_millis(37));
 }

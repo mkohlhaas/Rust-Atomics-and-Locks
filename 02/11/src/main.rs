@@ -1,4 +1,5 @@
 // increment-with-compare-exchange
+// https://mara.nl/atomics/atomics.html#cas
 
 use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering::Relaxed;
@@ -8,15 +9,25 @@ fn increment(a: &AtomicU32) {
   loop {
     let new = current + 1;
     match a.compare_exchange(current, new, Relaxed, Relaxed) {
-      Ok(_) => return,
-      Err(v) => current = v,
+      Ok(_) => {
+        println!("OK");
+        return;
+      }
+      Err(v) => {
+        println!("Error");
+        current = v;
+      }
     }
   }
 }
 
 fn main() {
   let a = AtomicU32::new(0);
+
   increment(&a);
   increment(&a);
+
   assert_eq!(a.into_inner(), 2);
+
+  println!("Done!")
 }

@@ -1,4 +1,5 @@
 // id-allocation-subtract-before-panic
+// https://mara.nl/atomics/atomics.html#example-id-allocation
 
 use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering::Relaxed;

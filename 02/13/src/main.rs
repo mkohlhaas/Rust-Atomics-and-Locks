@@ -1,7 +1,13 @@
 // lazy-one-time-init
+// https://mara.nl/atomics/atomics.html#example-racy-init
 
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::Ordering::Relaxed;
+
+fn generate_random_key() -> u64 {
+  42
+  // TODO
+}
 
 fn get_key() -> u64 {
   static KEY: AtomicU64 = AtomicU64::new(0);
@@ -15,11 +21,6 @@ fn get_key() -> u64 {
   } else {
     key
   }
-}
-
-fn generate_random_key() -> u64 {
-  123
-  // TODO
 }
 
 fn main() {

@@ -1,9 +1,14 @@
 // stop-flag
+// https://mara.nl/atomics/atomics.html#atomic-load-and-store-operations
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
 use std::time::Duration;
+
+fn some_work() {
+  thread::sleep(Duration::from_millis(100));
+}
 
 fn main() {
   static STOP: AtomicBool = AtomicBool::new(false);
@@ -29,8 +34,4 @@ fn main() {
 
   // Wait until the background thread finishes.
   background_thread.join().unwrap();
-}
-
-fn some_work() {
-  thread::sleep(Duration::from_millis(100));
 }

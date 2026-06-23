@@ -1,9 +1,10 @@
 // id-allocation-panic
+// https://mara.nl/atomics/atomics.html#example-id-allocation
 
 use std::sync::atomic::AtomicU32;
 use std::sync::atomic::Ordering::Relaxed;
 
-// This version is problematic.
+// ⚠️ This version is problematic.
 fn allocate_new_id() -> u32 {
   static NEXT_ID: AtomicU32 = AtomicU32::new(0);
   let id = NEXT_ID.fetch_add(1, Relaxed);
@@ -28,5 +29,5 @@ fn main() {
 
   println!("overflowed!");
 
-  dbg!(allocate_new_id()); // ⚠️ This will produce zero again. ⚠️
+  dbg!(allocate_new_id()); // ⚠️ this will produce zero again
 }
