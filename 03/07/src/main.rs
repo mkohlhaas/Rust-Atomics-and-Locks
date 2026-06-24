@@ -1,6 +1,8 @@
 // release-aquire-unsafe
 // https://mara.nl/atomics/memory-ordering.html#release-and-acquire-ordering
 
+#![allow(unused_imports)]
+
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Release};
 use std::thread;
@@ -11,15 +13,15 @@ static READY: AtomicBool = AtomicBool::new(false);
 
 fn main() {
   thread::spawn(|| {
-    // Safety: Nothing else is accessing DATA,
-    // because we haven't set the READY flag yet.
+    // Safety: Nothing else is accessing DATA, because we haven't set the READY flag yet.
     unsafe { DATA = 123 };
     READY.store(true, Release); // Everything from before this store ..
   });
 
   while !READY.load(Acquire) {
     // .. is visible after this loads `true`.
-    thread::sleep(Duration::from_millis(100));
+
+    // thread::sleep(Duration::from_millis(100));
     println!("waiting...");
   }
 

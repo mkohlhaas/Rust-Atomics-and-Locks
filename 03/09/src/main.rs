@@ -4,6 +4,13 @@
 use std::sync::atomic::AtomicPtr;
 use std::sync::atomic::Ordering::{Acquire, Release};
 
+#[allow(dead_code)]
+struct Data([u8; 100]);
+
+fn generate_data() -> Data {
+  Data([42; 100])
+}
+
 fn get_data() -> &'static Data {
   static PTR: AtomicPtr<Data> = AtomicPtr::new(std::ptr::null_mut());
 
@@ -11,11 +18,11 @@ fn get_data() -> &'static Data {
 
   if p.is_null() {
     p = Box::into_raw(Box::new(generate_data()));
-    if let Err(e) = PTR.compare_exchange(std::ptr::null_mut(), p, Release, Acquire) {
-      // Safety: p comes from Box::into_raw right above,
-      // and wasn't shared with any other thread.
-      drop(unsafe { Box::from_raw(p) });
-      p = e;
+    if let Err(ptr) = PTR.compare_exchange(std::ptr::null_mut(), p, Release, Acquire) {
+      // Safety: p comes from Box::into_raw right above, and wasn't shared with any other thread.
+      // We are accessing p so we need an Acquire.
+      drop(unsafe { Box::from_raw(p) }); // deallocate our data; a different thread alreay initialized
+      p = ptr; // ptr points to data from another thread
     }
   }
 
@@ -23,14 +30,7 @@ fn get_data() -> &'static Data {
   unsafe { &*p }
 }
 
-#[allow(dead_code)]
-struct Data([u8; 100]);
-
-fn generate_data() -> Data {
-  Data([123; 100])
-}
-
 fn main() {
   println!("{:p}", get_data());
-  println!("{:p}", get_data()); // Same address as before.
+  println!("{:p}", get_data()); // same address as before
 }

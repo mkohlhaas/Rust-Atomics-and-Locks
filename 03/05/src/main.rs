@@ -1,6 +1,8 @@
 // out-of-thin-air
 // https://mara.nl/atomics/memory-ordering.html#oota
 
+// Out-of-Thin-Air Values do not happen in practice.
+
 use std::sync::atomic::AtomicI32;
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
@@ -22,6 +24,6 @@ fn main() {
   a.join().unwrap();
   b.join().unwrap();
 
-  assert_eq!(X.load(Relaxed), 0); // Might fail?
-  assert_eq!(Y.load(Relaxed), 0); // Might fail?
+  assert_eq!(X.load(Relaxed), 0); // might fail?
+  assert_eq!(Y.load(Relaxed), 0); // might fail?
 }

@@ -1,6 +1,9 @@
 // relaxed
 // https://mara.nl/atomics/memory-ordering.html#happens-before
 
+// NOTE: Memory ordering only matters when there are multiple shared variables with a dependeny!
+// https://youtu.be/C5xY96i0Aes?t=1360
+
 use std::sync::atomic::AtomicI32;
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
