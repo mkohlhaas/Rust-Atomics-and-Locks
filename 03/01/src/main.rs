@@ -1,4 +1,5 @@
 // relaxed
+// https://mara.nl/atomics/memory-ordering.html#happens-before
 
 use std::sync::atomic::AtomicI32;
 use std::sync::atomic::Ordering::Relaxed;

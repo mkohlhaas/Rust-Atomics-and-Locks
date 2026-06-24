@@ -1,4 +1,5 @@
 // lazy-init-box
+// https://mara.nl/atomics/memory-ordering.html#example-lazy-initialization-with-indirection
 
 use std::sync::atomic::AtomicPtr;
 use std::sync::atomic::Ordering::{Acquire, Release};
@@ -22,6 +23,7 @@ fn get_data() -> &'static Data {
   unsafe { &*p }
 }
 
+#[allow(dead_code)]
 struct Data([u8; 100]);
 
 fn generate_data() -> Data {

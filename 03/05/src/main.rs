@@ -1,4 +1,5 @@
 // out-of-thin-air
+// https://mara.nl/atomics/memory-ordering.html#oota
 
 use std::sync::atomic::AtomicI32;
 use std::sync::atomic::Ordering::Relaxed;
@@ -12,12 +13,15 @@ fn main() {
     let x = X.load(Relaxed);
     Y.store(x, Relaxed);
   });
+
   let b = thread::spawn(|| {
     let y = Y.load(Relaxed);
     X.store(y, Relaxed);
   });
+
   a.join().unwrap();
   b.join().unwrap();
+
   assert_eq!(X.load(Relaxed), 0); // Might fail?
   assert_eq!(Y.load(Relaxed), 0); // Might fail?
 }

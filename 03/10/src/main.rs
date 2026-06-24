@@ -1,4 +1,7 @@
 // seqcst
+// https://mara.nl/atomics/memory-ordering.html#seqcst
+
+#![allow(static_mut_refs)]
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::SeqCst;

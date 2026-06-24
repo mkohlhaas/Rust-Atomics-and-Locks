@@ -1,4 +1,7 @@
 // lock
+// https://mara.nl/atomics/memory-ordering.html#example-locking
+
+#![allow(static_mut_refs)]
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Relaxed, Release};
@@ -24,6 +27,7 @@ fn main() {
       s.spawn(f);
     }
   });
+
   // DATA now contains at least one exclamation mark (and maybe more).
   assert!(unsafe { DATA.len() } > 0);
   assert!(unsafe { DATA.chars().all(|c| c == '!') });

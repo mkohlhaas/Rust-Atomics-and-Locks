@@ -1,4 +1,5 @@
 // release-aquire
+// https://mara.nl/atomics/memory-ordering.html#release-and-acquire-ordering
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::AtomicU64;
@@ -13,12 +14,14 @@ static READY: AtomicBool = AtomicBool::new(false);
 fn main() {
   thread::spawn(|| {
     DATA.store(123, Relaxed);
-    READY.store(true, Release); // Everything from before this store ..
+    READY.store(true, Release); // everything from before this store ..
   });
+
   while !READY.load(Acquire) {
     // .. is visible after this loads `true`.
     thread::sleep(Duration::from_millis(100));
     println!("waiting...");
   }
+
   println!("{}", DATA.load(Relaxed));
 }

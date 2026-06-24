@@ -1,4 +1,5 @@
 // release-aquire-unsafe
+// https://mara.nl/atomics/memory-ordering.html#release-and-acquire-ordering
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Release};
@@ -15,11 +16,13 @@ fn main() {
     unsafe { DATA = 123 };
     READY.store(true, Release); // Everything from before this store ..
   });
+
   while !READY.load(Acquire) {
     // .. is visible after this loads `true`.
     thread::sleep(Duration::from_millis(100));
     println!("waiting...");
   }
+
   // Safety: Nothing is mutating DATA, because READY is set.
   println!("{}", unsafe { DATA });
 }

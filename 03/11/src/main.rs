@@ -1,8 +1,9 @@
 // fence
+// https://mara.nl/atomics/memory-ordering.html#fences
 
-use std::sync::atomic::fence;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Relaxed, Release};
+use std::sync::atomic::fence;
 use std::thread;
 use std::time::Duration;
 
@@ -10,6 +11,11 @@ static mut DATA: [u64; 10] = [0; 10];
 
 const ATOMIC_FALSE: AtomicBool = AtomicBool::new(false);
 static READY: [AtomicBool; 10] = [ATOMIC_FALSE; 10];
+
+fn some_calculation(i: usize) -> u64 {
+  thread::sleep(Duration::from_millis(400 + i as u64 % 3 * 100));
+  123
+}
 
 fn main() {
   for i in 0..10 {
@@ -29,9 +35,6 @@ fn main() {
       }
     }
   }
-}
 
-fn some_calculation(i: usize) -> u64 {
-  thread::sleep(Duration::from_millis(400 + i as u64 % 3 * 100));
-  123
+  println!("Done!")
 }
