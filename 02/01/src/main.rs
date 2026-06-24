@@ -1,5 +1,6 @@
 // stop-flag
-// https://mara.nl/atomics/atomics.html#atomic-load-and-store-operations
+// Atomic Load and Store Operations
+// https://mara.nl/atomics/atomics.html#example-stop-flag
 
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::Relaxed;
@@ -7,7 +8,8 @@ use std::thread;
 use std::time::Duration;
 
 fn some_work() {
-  thread::sleep(Duration::from_millis(100));
+  print!(".");
+  thread::sleep(Duration::from_millis(200));
 }
 
 fn main() {
@@ -18,14 +20,15 @@ fn main() {
     while !STOP.load(Relaxed) {
       some_work();
     }
+    println!("Shutting down...")
   });
 
   // Use the main thread to listen for user input.
   for line in std::io::stdin().lines() {
     match line.unwrap().as_str() {
-      "help" => println!("commands: help, stop"),
+      "help" => println!("Commands: help, stop"),
       "stop" => break,
-      cmd => println!("unknown command: {cmd:?}"),
+      cmd => println!("Unknown command: {cmd:?}. Ask for help!"),
     }
   }
 
@@ -34,4 +37,6 @@ fn main() {
 
   // Wait until the background thread finishes.
   background_thread.join().unwrap();
+
+  println!("Done!")
 }

@@ -1,13 +1,17 @@
 // id-allocation-subtract-before-panic
+// Fetch-and-Modify Operations
 // https://mara.nl/atomics/atomics.html#example-id-allocation
 
-use std::sync::atomic::AtomicU32;
+use std::sync::atomic::AtomicU16;
 use std::sync::atomic::Ordering::Relaxed;
 
-fn allocate_new_id() -> u32 {
-  static NEXT_ID: AtomicU32 = AtomicU32::new(0);
+const MAX_ID: u16 = 100;
+
+fn allocate_new_id() -> u16 {
+  static NEXT_ID: AtomicU16 = AtomicU16::new(0);
   let id = NEXT_ID.fetch_add(1, Relaxed);
-  if id >= 1000 {
+  println!("Current ID: {id}");
+  if id >= MAX_ID {
     NEXT_ID.fetch_sub(1, Relaxed);
     panic!("too many IDs!");
   }
@@ -18,5 +22,18 @@ fn main() {
   dbg!(allocate_new_id());
   dbg!(allocate_new_id());
   dbg!(allocate_new_id());
-  // TODO
+
+  println!("Overflowing the counter… (this might take a minute)");
+
+  // don't do anything on a panic
+  std::panic::set_hook(Box::new(|_| {}));
+
+  for _ in 3..=u16::MAX {
+    let id = std::panic::catch_unwind(|| allocate_new_id()).unwrap_or_default();
+    if id != 0 {
+      println!("ID: {id}");
+    }
+  }
+
+  println!("Done!");
 }

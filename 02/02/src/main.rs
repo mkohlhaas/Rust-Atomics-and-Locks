@@ -1,4 +1,5 @@
 // progress-reporting
+// Atomic Load and Store Operations
 // https://mara.nl/atomics/atomics.html#example-progress-reporting
 
 use std::sync::atomic::AtomicUsize;
@@ -6,7 +7,8 @@ use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
 use std::time::Duration;
 
-fn process_item(_: usize) {
+fn process_item(n: usize) {
+  println!("Working on {n}");
   thread::sleep(Duration::from_millis(100));
 }
 

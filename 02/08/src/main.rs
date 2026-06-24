@@ -1,4 +1,5 @@
 // id-allocation
+// Fetch-and-Modify Operations
 // https://mara.nl/atomics/atomics.html#example-id-allocation
 
 use std::sync::atomic::AtomicU32;
@@ -15,7 +16,7 @@ fn main() {
   dbg!(allocate_new_id()); // 1
   dbg!(allocate_new_id()); // 2
 
-  println!("overflowing the counter... (this might take a minute)");
+  println!("overflowing the counter… (this might take a minute)");
 
   for _ in 3..=u32::MAX {
     allocate_new_id();

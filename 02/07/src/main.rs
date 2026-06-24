@@ -1,6 +1,8 @@
 // statistics
+// Fetch-and-Modify Operations
 // https://mara.nl/atomics/atomics.html#example-statistics
 
+use rand::RngExt;
 use std::sync::atomic::AtomicU64;
 use std::sync::atomic::AtomicUsize;
 use std::sync::atomic::Ordering::Relaxed;
@@ -8,8 +10,9 @@ use std::thread;
 use std::time::Duration;
 use std::time::Instant;
 
-fn process_item(_: usize) {
-  thread::sleep(Duration::from_millis(100));
+fn process_item(n: usize, delta_time: u64) {
+  println!("Processing item {n}");
+  thread::sleep(Duration::from_millis(200u64 + delta_time));
 }
 
 fn main() {
@@ -23,8 +26,13 @@ fn main() {
       s.spawn(move || {
         for i in 0..25 {
           let start = Instant::now();
-          process_item(t * 25 + i); // Assuming this takes some time.
+
+          let mut rng = rand::rng();
+          let random_number: u64 = rng.random_range(0..100);
+          process_item(t * 25 + i, random_number); // assuming this takes some time
+
           let time_taken = start.elapsed().as_micros() as u64;
+
           num_done.fetch_add(1, Relaxed);
           total_time.fetch_add(time_taken, Relaxed);
           max_time.fetch_max(time_taken, Relaxed);
@@ -49,7 +57,7 @@ fn main() {
           max_time,
         );
       }
-      thread::sleep(Duration::from_millis(250));
+      thread::sleep(Duration::from_millis(1000));
     }
   });
 
