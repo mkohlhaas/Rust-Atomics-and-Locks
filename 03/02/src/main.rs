@@ -10,7 +10,7 @@ static X: AtomicI32 = AtomicI32::new(0);
 fn f() {
   let x = X.load(Relaxed);
   print!("{x}");
-  assert!(x == 1 || x == 2); // cannot fail; x can be still 1 or already 2
+  assert!(x == 1 || x == 2); // cannot fail; x can be still 1 or already 2; x cannot be 0 or 3
 }
 
 fn main() {

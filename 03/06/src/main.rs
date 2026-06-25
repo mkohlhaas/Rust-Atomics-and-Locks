@@ -11,7 +11,7 @@
 // NOTE:
 // Acquire-Release Semantics make only sense:
 //  - as a pair
-//  - if other data is shared
+//  - if some other data is shared
 
 #![allow(unused_imports)]
 

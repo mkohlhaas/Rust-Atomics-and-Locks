@@ -27,6 +27,7 @@ fn main() {
     // `numbers` lives longer than the scope s. Therefore we can borrow a
     // reference to it.
     thread::scope(|s| {
+      // scoped spawn's have special lifetime 'scope (not 'static)
       s.spawn(|| {
         println!("length: {}", numbers.len());
       });

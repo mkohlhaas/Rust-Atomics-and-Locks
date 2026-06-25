@@ -45,6 +45,7 @@ where
 }
 
 // checking (auto-implemented) traits Send and Sync
+#[allow(dead_code)]
 fn check_traits<T>(x: T) -> T
 where
   T: Send,

@@ -23,7 +23,7 @@ fn main() {
   }
 
   {
-    // returns error on panics
+    // returns Err on panics
     let t = thread::spawn(|| panic!("Oops!!!"));
     t.join().expect("I wanted to join!");
   }

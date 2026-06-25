@@ -23,8 +23,14 @@ fn b() {
   let c = X.load(Relaxed);
   let d = X.load(Relaxed);
   println!("{a} {b} {c} {d}");
-  // ⚠️ assertion is wrong!
+
+  // This is a wrong assert:
   // assert!(a == b && b == c && c == d);
+
+  assert!(a == 0 || a == 5 || a == 15);
+  assert!(b == 0 || b == 5 || b == 15);
+  assert!(c == 0 || c == 5 || c == 15);
+  assert!(d == 0 || d == 5 || d == 15);
 }
 
 fn main() {

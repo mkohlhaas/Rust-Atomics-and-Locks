@@ -1,6 +1,8 @@
 // fence
 // https://mara.nl/atomics/memory-ordering.html#fences
 
+#![allow(unused_imports)]
+
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Relaxed, Release};
 use std::sync::atomic::fence;
@@ -28,7 +30,7 @@ fn main() {
     thread::spawn(move || {
       let data = some_calculation(i);
       unsafe { DATA[i] = data };
-      READY[i].store(true, Release); // threads releasing atomics
+      READY[i].store(true, Release);
     });
   }
 
@@ -40,10 +42,12 @@ fn main() {
   if ready.contains(&true) {
     // A fence is not tied to any single atomic variable.
     // Every Relaxed load before this fence turns into an Acquire.
+    // (In our case there is only one such location.)
     fence(Acquire);
 
     for i in 0..10 {
       if ready[i] {
+        // will always set data{i} to 123
         println!("data{i} = {}", unsafe { DATA[i] });
       }
     }
@@ -63,6 +67,10 @@ fn main() {
   // All memory writes that happened before the atomic store in thread A become
   // visible side-effects in thread B.
 
+  // Make sure all threads have finished (except main thread).
+  // thread::sleep(Duration::from_millis(1000));
+
+  // NOTE: Whenever you have true, you must have a value of 123 in DATA.
   println!("{:?}", &READY); // ⚠️
   println!("{:?}", unsafe { DATA }); // ⚠️
 

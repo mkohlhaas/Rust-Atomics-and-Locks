@@ -20,7 +20,7 @@ fn get_data() -> &'static Data {
     p = Box::into_raw(Box::new(generate_data()));
     if let Err(ptr) = PTR.compare_exchange(std::ptr::null_mut(), p, Release, Acquire) {
       // Safety: p comes from Box::into_raw right above, and wasn't shared with any other thread.
-      // We are accessing p so we need an Acquire.
+      // NOTE: We are accessing p so we need an Acquire.
       drop(unsafe { Box::from_raw(p) }); // deallocate our data; a different thread alreay initialized
       p = ptr; // ptr points to data from another thread
     }

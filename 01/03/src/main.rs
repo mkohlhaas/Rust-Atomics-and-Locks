@@ -6,7 +6,7 @@ use std::thread;
 fn main() {
   let numbers = vec![1, 2, 3];
 
-  // move is necessary bc spawn has a 'static (thread might live as long as the program)
+  // move is necessary bc spawn has a 'static lifetime (thread might live as long as the program)
   thread::spawn(move || {
     for n in &numbers {
       println!("{n}");
