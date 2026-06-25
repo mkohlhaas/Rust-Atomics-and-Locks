@@ -11,12 +11,20 @@ fn f() {
 }
 
 fn main() {
-  let t1 = thread::spawn(f);
-  let t2 = thread::spawn(f);
+  {
+    let t1 = thread::spawn(f);
+    let t2 = thread::spawn(f);
 
-  let id = thread::current().id();
-  println!("Hello from the main thread: {id:?}");
+    let id = thread::current().id();
+    println!("Hello from the main thread: {id:?}");
 
-  t1.join().unwrap();
-  t2.join().unwrap();
+    t1.join().unwrap();
+    t2.join().unwrap();
+  }
+
+  {
+    // returns error on panics
+    let t = thread::spawn(|| panic!("Oops!!!"));
+    t.join().expect("I wanted to join!");
+  }
 }

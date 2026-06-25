@@ -7,6 +7,8 @@ use std::sync::Mutex;
 use std::thread;
 use std::time::Duration;
 
+// Condvars are used with Mutexes.
+
 fn main() {
   let queue = Mutex::new(VecDeque::new());
   let not_empty = Condvar::new();
@@ -14,16 +16,18 @@ fn main() {
   thread::scope(|s| {
     s.spawn(|| {
       loop {
-        let mut q = queue.lock().unwrap();
+        let mut mutex_guard = queue.lock().unwrap();
         let item = loop {
-          if let Some(item) = q.pop_front() {
+          if let Some(item) = mutex_guard.pop_front() {
             break item;
           } else {
-            // wait takes a mutex and unlocks, waits, relocks
-            q = not_empty.wait(q).unwrap(); // blocks the current thread until this condition variable receives a notification
+            // queue is empty
+            // `wait` takes a mutex guard and then unlocks the Mutex, waits for notification, and then relocks the Mutex
+            // returns the locked mutex guard
+            mutex_guard = not_empty.wait(mutex_guard).unwrap(); // blocks the current thread until this condition variable receives a notification
           }
         };
-        drop(q);
+        drop(mutex_guard);
         dbg!(item);
       }
     });
@@ -31,7 +35,9 @@ fn main() {
     for i in 0.. {
       queue.lock().unwrap().push_back(i);
       if i % 5 == 0 {
-        not_empty.notify_one(); // wakes up one blocked thread on this condvar
+        // Wakes up one blocked thread on this condvar.
+        // Producer notifies when queue is not empty.
+        not_empty.notify_one();
       }
       thread::sleep(Duration::from_millis(200));
     }

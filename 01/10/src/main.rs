@@ -1,6 +1,9 @@
 // unlock-before-sleep
 // https://mara.nl/atomics/basics.html#rusts-mutex
 
+// Locking a mutex returns a MutexGuard, which allows access to the wrapped mutex data.
+// When the guard is dropped, the mutex is unlocked.
+
 use std::sync::Mutex;
 use std::thread;
 use std::time::Duration;

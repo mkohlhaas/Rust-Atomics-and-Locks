@@ -1,10 +1,31 @@
 // cell
 // https://mara.nl/atomics/basics.html#cell
 
+// Interior Mutability
+// Allows data mutation through immutable references (e.g. Rc, Arc, …)
+//
+// Think of:
+// &T     -> shared    reference (instead of immutable reference)
+// &mut T -> exclusive reference (instead of mutable   reference)
+// If T is an interior mutable type, then the data under bots of these is somewhat mutable.
+
+// Cell
+//  - single-threaded only (not thread-safe)
+//  - .get()
+//  - .set(…)
+
+// RefCell
+//  - single-threaded only (not thread-safe) TODO: ???
+//  - .borrow()
+//  - .borrow_mut()
+
+// UnsafeCell is the building block for other data types, e.g. Cell, Mutex, … (just look at the
+// source code)
+
 use std::cell::Cell;
 
 fn f(v: &Cell<Vec<i32>>) {
-  // typical Cell code:
+  // Typical Cell code (no one-liners):
   // 1. get
   // 2. mutate
   // 3. set

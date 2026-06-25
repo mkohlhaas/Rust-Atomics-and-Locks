@@ -1,10 +1,20 @@
 // rc
 // https://mara.nl/atomics/basics.html#arc
 
+// Reference counting allows us to have MULTIPLE OWNERS (shared ownership) of the same reference.
+// The last one holding a reference will do the actual drop.
+
+// Shared references in Rust disallow mutation by default, and Arc and Rc are no exception.
+// https://doc.rust-lang.org/std/sync/struct.Arc.html
+
+// One possible solution: use interior mutablility, e.g. wrap a Mutex into an Arc ("Arc::new(vec![1, 2, 3]);")
+
 #![allow(unused_imports)]
 
 use std::{rc::Rc, sync::Arc, thread};
 
+// a must be unequal to b as Rust doesn't allow another immutable borrow when having already a
+// mutable one.
 fn f(a: &i32, b: &mut i32) {
   let before = *a;
   *b += 1;
@@ -12,14 +22,14 @@ fn f(a: &i32, b: &mut i32) {
   let after = *a;
 
   if before != after {
-    println!("not the same"); // never happens
+    println!("not the same"); // never happens (compiler might optimize this away)
   } else {
     println!("the same");
   }
 }
 
 fn main() {
-  // Rc (single threads)
+  // Rc (single-threaded use cases)
   {
     let a = Rc::new([1, 2, 3]);
     let b = a.clone();
@@ -40,7 +50,7 @@ fn main() {
 
   println!();
 
-  // Arc (thread-safe)
+  // Arc (thread-safe; multi-threaded use cases)
   {
     let a = Arc::new([4, 5, 6]);
     let b = a.clone();
@@ -59,11 +69,11 @@ fn main() {
     let a = Arc::new([7, 8, 9]);
     let b = a.clone();
 
-    let j = thread::spawn(move || {
+    let t = thread::spawn(move || {
       dbg!(b);
     });
 
-    j.join().unwrap();
+    t.join().unwrap();
 
     dbg!(a);
   }
@@ -72,18 +82,19 @@ fn main() {
 
   // Better:
   // The clone of the Arc lives in a different scope.
-  // We can use the same name in each thread.
+  // We can use the SAME NAME in each thread.
   {
     let a = Arc::new([9, 10, 11]);
 
-    let j = thread::spawn({
+    let t = thread::spawn({
+      // clone inside the threads
       let a = a.clone();
       move || {
         dbg!(a);
       }
     });
 
-    j.join().unwrap();
+    t.join().unwrap();
 
     dbg!(a);
   }
