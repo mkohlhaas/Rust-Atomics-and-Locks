@@ -14,7 +14,6 @@
 
 Often you just pack everything up in an Arc to get [Send and Sync semantics](https://doc.rust-lang.org/std/sync/struct.Condvar.html#examples).
 
-
 ## Send, Sync
 
 ```
@@ -31,6 +30,8 @@ Often you just pack everything up in an Arc to get [Send and Sync semantics](htt
   - &T     is a  shared    reference.
   - &mut T is an exclusive reference.
 ```
+
+A data structure that is Send but not Sync is NOT thread-safe.
 
 
 | Struct     | Description                                                      | Mutability                                                                                      |
