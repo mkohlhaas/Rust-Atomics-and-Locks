@@ -1,3 +1,5 @@
+// https://mara.nl/atomics/building-spinlock.html#an-unsafe-spin-lock
+
 use std::cell::UnsafeCell;
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Release};
@@ -25,7 +27,7 @@ impl<T> SpinLock<T> {
   }
 
   /// Safety: The &mut T from lock() must be gone!
-  /// (And no cheating by keeping reference to fields of that T around!)
+  /// And no cheating by keeping reference to fields of that T around!
   pub unsafe fn unlock(&self) {
     self.locked.store(false, Release);
   }

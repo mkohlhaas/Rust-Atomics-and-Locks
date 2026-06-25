@@ -1,3 +1,5 @@
+// https://mara.nl/atomics/building-spinlock.html#building-safe-spinlock
+
 use std::cell::UnsafeCell;
 use std::ops::{Deref, DerefMut};
 use std::sync::atomic::AtomicBool;
@@ -24,7 +26,7 @@ impl<T> SpinLock<T> {
     }
   }
 
-  pub fn lock(&self) -> Guard<T> {
+  pub fn lock(&self) -> Guard<'_, T> {
     while self.locked.swap(true, Acquire) {
       std::hint::spin_loop();
     }
@@ -35,16 +37,14 @@ impl<T> SpinLock<T> {
 impl<T> Deref for Guard<'_, T> {
   type Target = T;
   fn deref(&self) -> &T {
-    // Safety: The very existence of this Guard
-    // guarantees we've exclusively locked the lock.
+    // Safety: The very existence of this Guard guarantees we've exclusively locked the lock.
     unsafe { &*self.lock.value.get() }
   }
 }
 
 impl<T> DerefMut for Guard<'_, T> {
   fn deref_mut(&mut self) -> &mut T {
-    // Safety: The very existence of this Guard
-    // guarantees we've exclusively locked the lock.
+    // Safety: The very existence of this Guard guarantees we've exclusively locked the lock.
     unsafe { &mut *self.lock.value.get() }
   }
 }
@@ -58,7 +58,9 @@ impl<T> Drop for Guard<'_, T> {
 #[test]
 fn main() {
   use std::thread;
+
   let x = SpinLock::new(Vec::new());
+
   thread::scope(|s| {
     s.spawn(|| x.lock().push(1));
     s.spawn(|| {
@@ -67,6 +69,7 @@ fn main() {
       g.push(2);
     });
   });
+
   let g = x.lock();
   assert!(g.as_slice() == [1, 2, 2] || g.as_slice() == [2, 2, 1]);
 }
