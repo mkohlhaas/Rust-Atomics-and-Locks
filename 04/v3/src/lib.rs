@@ -5,34 +5,20 @@ use std::ops::{Deref, DerefMut};
 use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::{Acquire, Release};
 
+const LOCKED: bool = true;
+const UNLOCKED: bool = false;
+
 pub struct SpinLock<T> {
   locked: AtomicBool,
   value: UnsafeCell<T>,
 }
 
-unsafe impl<T> Sync for SpinLock<T> where T: Send {}
-
 pub struct Guard<'a, T> {
   lock: &'a SpinLock<T>,
 }
 
+unsafe impl<T> Sync for SpinLock<T> where T: Send {}
 unsafe impl<T> Sync for Guard<'_, T> where T: Sync {}
-
-impl<T> SpinLock<T> {
-  pub const fn new(value: T) -> Self {
-    Self {
-      locked: AtomicBool::new(false),
-      value: UnsafeCell::new(value),
-    }
-  }
-
-  pub fn lock(&self) -> Guard<'_, T> {
-    while self.locked.swap(true, Acquire) {
-      std::hint::spin_loop();
-    }
-    Guard { lock: self }
-  }
-}
 
 impl<T> Deref for Guard<'_, T> {
   type Target = T;
@@ -51,7 +37,23 @@ impl<T> DerefMut for Guard<'_, T> {
 
 impl<T> Drop for Guard<'_, T> {
   fn drop(&mut self) {
-    self.lock.locked.store(false, Release);
+    self.lock.locked.store(UNLOCKED, Release);
+  }
+}
+
+impl<T> SpinLock<T> {
+  pub const fn new(value: T) -> Self {
+    Self {
+      locked: AtomicBool::new(UNLOCKED),
+      value: UnsafeCell::new(value),
+    }
+  }
+
+  pub fn lock(&self) -> Guard<'_, T> {
+    while self.locked.swap(LOCKED, Acquire) {
+      std::hint::spin_loop();
+    }
+    Guard { lock: self }
   }
 }
 
@@ -66,10 +68,10 @@ fn main() {
     s.spawn(|| {
       let mut g = x.lock();
       g.push(2);
-      g.push(2);
+      g.push(3);
     });
   });
 
   let g = x.lock();
-  assert!(g.as_slice() == [1, 2, 2] || g.as_slice() == [2, 2, 1]);
+  assert!(g.as_slice() == [1, 2, 3] || g.as_slice() == [2, 3, 1]);
 }
