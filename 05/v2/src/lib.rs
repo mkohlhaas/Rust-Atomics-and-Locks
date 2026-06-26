@@ -20,8 +20,10 @@ impl<T> Channel<T> {
 
   /// Safety: Only call this once!
   pub unsafe fn send(&self, message: T) {
-    (*self.message.get()).write(message);
-    self.ready.store(true, Release);
+    unsafe {
+      (*self.message.get()).write(message);
+      self.ready.store(true, Release);
+    }
   }
 
   pub fn is_ready(&self) -> bool {
@@ -31,6 +33,6 @@ impl<T> Channel<T> {
   /// Safety: Only call this once,
   /// and only after is_ready() returns true!
   pub unsafe fn receive(&self) -> T {
-    (*self.message.get()).assume_init_read()
+    unsafe { (*self.message.get()).assume_init_read() }
   }
 }
