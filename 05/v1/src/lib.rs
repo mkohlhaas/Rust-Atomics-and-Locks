@@ -30,3 +30,23 @@ impl<T> Channel<T> {
     }
   }
 }
+
+#[test]
+fn main() {
+  use std::thread;
+
+  let channel = Channel::new();
+  let t = thread::current();
+
+  thread::scope(|s| {
+    s.spawn(|| {
+      channel.send("hello world!");
+      t.unpark();
+    });
+
+    thread::park();
+    let msg = channel.receive();
+
+    assert_eq!(msg, "hello world!");
+  });
+}

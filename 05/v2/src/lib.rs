@@ -36,3 +36,26 @@ impl<T> Channel<T> {
     unsafe { (*self.message.get()).assume_init_read() }
   }
 }
+
+#[test]
+fn main() {
+  use std::thread;
+
+  let channel = Channel::new();
+  let t = thread::current();
+
+  thread::scope(|s| {
+    s.spawn(|| {
+      unsafe { channel.send("hello world!") };
+      t.unpark();
+    });
+
+    while !channel.is_ready() {
+      thread::park();
+    }
+
+    let msg = unsafe { channel.receive() };
+
+    assert_eq!(msg, "hello world!");
+  });
+}
